@@ -68,7 +68,6 @@ try {
   const tx = await db.begin();
 
   try {
-
     for (const user of ['Daniel', 'Isabell']) {
       await db.query`INSERT INTO users (name) VALUES (${user})`;
     }
@@ -77,7 +76,6 @@ try {
   } finally {
     await tx.rollback();
   }
-
 } finally {
   await db.release();
 }

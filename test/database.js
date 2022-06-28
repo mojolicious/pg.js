@@ -7,8 +7,8 @@ t.test('Database', skip, async t => {
   await t.test('Options', async t => {
     const pg = new Pg(process.env.TEST_ONLINE, {
       allowExitOnIdle: true,
-      connectionTimeout: 10000,
-      idleTimeout: 20000,
+      connectionTimeoutMillis: 10000,
+      idleTimeoutMillis: 20000,
       max: 1
     });
     t.equal(pg.pool.options.allowExitOnIdle, true);

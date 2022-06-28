@@ -6,10 +6,6 @@ import {urlSplit} from '@mojojs/util';
 import pg from 'pg';
 
 interface PgOptions {
-  allowExitOnIdle?: boolean;
-  connectionTimeout?: number;
-  idleTimeout?: number;
-  max?: number;
   searchPath?: string[];
 }
 
@@ -28,15 +24,11 @@ export default class Pg extends Base {
 
   _migrations: Migrations | undefined;
 
-  constructor(config: string | pg.PoolConfig, options: PgOptions = {}) {
+  constructor(config: string | pg.PoolConfig, options: PgOptions & pg.PoolConfig = {}) {
     super();
 
     const parsedConfig = Pg.parseConfig(config);
-    if (options.allowExitOnIdle !== undefined) parsedConfig.allowExitOnIdle = options.allowExitOnIdle;
-    if (options.connectionTimeout !== undefined) parsedConfig.connectionTimeoutMillis = options.connectionTimeout;
-    if (options.idleTimeout !== undefined) parsedConfig.idleTimeoutMillis = options.idleTimeout;
-    if (options.max !== undefined) parsedConfig.max = options.max;
-    const pool = new pg.Pool(parsedConfig);
+    const pool = new pg.Pool({...options, ...parsedConfig});
     this.pool = pool;
 
     if (options.searchPath !== undefined) this.searchPath = options.searchPath;

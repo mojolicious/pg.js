@@ -1,4 +1,4 @@
-const kCount = Symbol('count');
+const kCount = Symbol('kCount');
 
 /**
  * PostgreSQL query result class.

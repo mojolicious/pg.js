@@ -4,11 +4,20 @@ jobs:
   test:
     name: Node ${{ matrix.node-version }} and ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
     strategy:
       fail-fast: false
       matrix:
         node-version: [16.x, 17.x, 18.x]
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v1
       - name: Use Node ${{ matrix.node-version }}
@@ -21,3 +30,5 @@ jobs:
         run: npm run build
       - name: npm test
         run: npm test
+        env:
+          TEST_ONLINE: postgresql://postgres:postgres@/postgres

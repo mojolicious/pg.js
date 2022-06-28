@@ -26,7 +26,7 @@ for (const row of results.all) {
 const db = await pg.db();
 const results = await db.query`SELECT 2`;
 const results = await db.query`SELECT 3`;
-db.release();
+await db.release();
 ```
 
 Tagged template literals are used everywhere to protect from SQL injection attacks and to make syntax highlighting

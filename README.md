@@ -124,7 +124,8 @@ pg.migrations.fromString('-- 1 up\n...', {name: 'my_other_app'});
 await pg.migrations.fromDirecory(Path.currentFile().sibling('migrations'), {name: 'yet_another_app'});
 ```
 
-To store your individual migration steps in separate files you can use a directory layout like this.
+To store your individual migration steps in separate SQL files you can use a directory structure like this. These files
+do not require special comments, because the version and migration direction are contained in the file names.
 
 ```
 `--migrations

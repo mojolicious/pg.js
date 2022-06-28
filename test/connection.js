@@ -45,5 +45,21 @@ t.test('Connections', t => {
     t.end();
   });
 
+  t.test('Common variations', t => {
+    t.same(Pg.parseConfig('postgresql://postgres:postgres@postgres:5432/postgres'), {
+      user: 'postgres',
+      password: 'postgres',
+      host: 'postgres',
+      port: 5432,
+      database: 'postgres'
+    });
+    t.same(Pg.parseConfig('postgresql://postgres:postgres@/postgres'), {
+      user: 'postgres',
+      password: 'postgres',
+      database: 'postgres'
+    });
+    t.end();
+  });
+
   t.end();
 });

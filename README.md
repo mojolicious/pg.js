@@ -57,6 +57,34 @@ const results = await pg.query`SELECT * FROM users WHERE name = ${name} ${partia
 
 But make sure to use methods like `pg.escapeLiteral()` to escape unsafe values yourself.
 
+## Transactions
+
+It's best to use `try`/`finally` blocks whenever you dequeue a connection with `pg.db()`, to ensure efficient resource
+mangement.
+
+```js
+try {
+  const db = await pg.db();
+  const tx = await db.begin();
+
+  try {
+
+    for (const user of ['Daniel', 'Isabell']) {
+      await db.query`INSERT INTO users (name) VALUES (${user})`;
+    }
+    await tx.commit();
+
+  } finally {
+    await tx.rollback();
+  }
+
+} finally {
+  await db.release();
+}
+```
+
+The `tx.rollback()` call does nothing if `tx.commit()` has been called first.
+
 ## Notifications
 
 You can use events as well as async iterators for notifications.

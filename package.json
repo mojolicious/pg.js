@@ -3,9 +3,13 @@
   "version": "0.2.0",
   "description": "mojo.js ♥ PostgreSQL",
   "keywords": [
+    "mojojs",
+    "postgresql",
     "postgres",
     "pg",
-    "database"
+    "database",
+    "db",
+    "sql"
   ],
   "author": "Sebastian Riedel <kraih@mojolicious.org>",
   "license": "MIT",

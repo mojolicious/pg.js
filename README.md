@@ -83,6 +83,67 @@ try {
 
 The `tx.rollback()` call does nothing if `tx.commit()` has been called first.
 
+## Migrations
+
+To manage your database schema, there is also a minimal SQL based migration system built-in. A migration file is just a
+collection of sql blocks, with one or more statements, separated by comments of the form `-- VERSION UP/DOWN`.
+
+```sql
+-- 1 up
+CREATE TABLE messages (message TEXT);
+INSERT INTO messages VALUES ('I ♥ Mojolicious!');
+-- 1 down
+DROP TABLE messages;
+ 
+-- 2 up (...you can comment freely here...)
+CREATE TABLE stuff (whatever INT);
+-- 2 down
+DROP TABLE stuff;
+```
+
+The idea is to let you migrate from any version, to any version, up and down. Migrations are very safe, because they
+are performed in transactions and only one can be performed at a time. If a single statement fails, the whole migration
+will fail and get rolled back. Every set of migrations has a `name`, which is stored together with the currently active
+version in an automatically created table named `mojo_migrations`.
+
+```js
+import Path from '@mojojs/path';
+
+// Load migrations from "migrations/myapp.sql" and migrate to the latest version
+await pg.migrations.fromFile(Path.currentFile().sibling('migrations', 'myapp.sql'), {name: 'myapp'});
+await pg.migrations.migrate();
+
+// Use migrations to drop and recreate the table
+await pg.migrations.migrate(0);
+await pg.migrations.migrate();
+
+// Load mogrations from a string
+pg.migrations.fromString('-- 1 up\n...', {name: 'my_other_app'});
+
+// Load migrations from a directory
+await pg.migrations.fromDirecory(Path.currentFile().sibling('migrations'), {name: 'yet_another_app'});
+```
+
+To store your individual migration steps in separate files you can use a directory layout like this.
+
+```
+`--migrations
+   |-- 1
+   |   |-- up.sql
+   |   `-- down.sql
+   |-- 2
+   |   `-- up.sql
+   |-- 4
+   |   |-- up.sql
+   |   `-- down.sql
+   `-- 5
+       |-- up.sql
+       `-- down.sql
+```
+
+Migrations are also compatible with [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg), if you want to mix Perl and
+JavaScript code.
+
 ## Notifications
 
 You can use events as well as async iterators for notifications.

@@ -32,7 +32,7 @@ await db.release();
 Tagged template literals are used everywhere to protect from SQL injection attacks and to make syntax highlighting
 easy.
 
-## SQL building
+### SQL building
 
 For easier SQL query building with partials, there are also `pg.sql` and `db.sql` tagged template literals. They can be
 used recursively to build complex queries securely.
@@ -57,7 +57,7 @@ const results = await pg.query`SELECT * FROM users WHERE name = ${name} ${partia
 
 But make sure to use methods like `pg.escapeLiteral()` to escape unsafe values yourself.
 
-## Transactions
+### Transactions
 
 It's best to use `try`/`finally` blocks whenever you dequeue a connection with `pg.db()`, to ensure efficient resource
 mangement.
@@ -83,7 +83,7 @@ try {
 
 The `tx.rollback()` call does nothing if `tx.commit()` has been called first.
 
-## Migrations
+### Migrations
 
 To manage your database schema, there is also a minimal SQL based migration system built-in. A migration file is just a
 collection of sql blocks, with one or more statements, separated by comments of the form `-- VERSION UP/DOWN`.
@@ -145,7 +145,7 @@ do not require special comments, because the version and migration direction are
 Migrations are also compatible with [Mojo::Pg](https://metacpan.org/pod/Mojo::Pg), if you want to mix Perl and
 JavaScript code.
 
-## Notifications
+### Notifications
 
 You can use events as well as async iterators for notifications.
 
@@ -163,7 +163,7 @@ for await (const message of db) {
 await db.unlisten('foo');
 ```
 
-## Future
+### Future
 
 This package is designed to be compatible with the
 [explicit resource management proposal](https://github.com/tc39/proposal-explicit-resource-management) and will support
@@ -175,6 +175,10 @@ using const db = await pg.db();
 const results = await db.query`SELECT 2`;
 const results = await db.query`SELECT 3`;
 ```
+
+### Editor Support
+
+* [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kraih.javascript-tmpl-support)
 
 ## Installation
 

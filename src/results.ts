@@ -1,14 +1,21 @@
-const kRowCount = Symbol('rowCount');
+const kCount = Symbol('count');
 
 /**
  * PostgreSQL query result class.
  */
 export class Results<T> extends Array<T> {
-  [kRowCount]: number | null = null;
+  [kCount]: number | null = null;
 
-  constructor(rowCount: number | null, ...values: any[]) {
+  constructor(count: number | null, ...values: any[]) {
     super(...values);
-    this[kRowCount] = rowCount;
+    this[kCount] = count;
+  }
+
+  /**
+   * Get number of rows affected by query.
+   */
+  get count(): number | null {
+    return this[kCount];
   }
 
   /**
@@ -23,12 +30,5 @@ export class Results<T> extends Array<T> {
    */
   get last(): T | null {
     return this.length > 0 ? this[this.length - 1] : null;
-  }
-
-  /**
-   * Get number of rows affected by query.
-   */
-  get rowCount(): number | null {
-    return this[kRowCount];
   }
 }

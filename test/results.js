@@ -36,8 +36,8 @@ t.test('Results', skip, async t => {
     t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).first, null);
     t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).last, null);
     t.same(await db.query`SELECT * FROM results_test WHERE name = ${'bar'}`, [{id: 2, name: 'bar'}]);
-    t.same((await db.query`SELECT * FROM results_test`).rowCount, 2);
-    t.same((await db.query`SHOW SERVER_VERSION`).rowCount, null);
+    t.same((await db.query`SELECT * FROM results_test`).count, 2);
+    t.same((await db.query`SHOW SERVER_VERSION`).count, null);
   });
 
   await t.test('JSON', async t => {

@@ -16,11 +16,11 @@ t.test('Database', skip, async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
 
     const results = await pg.query`SELECT 1 AS one, 2 AS two, 3 AS three`;
-    t.equal(results.rowCount, 1);
+    t.equal(results.count, 1);
     t.same(results, [{one: 1, two: 2, three: 3}]);
 
     const results2 = await pg.query`SELECT 1, 2, 3`;
-    t.equal(results2.rowCount, 1);
+    t.equal(results2.count, 1);
     t.same(results2, [{'?column?': 3}]);
 
     await pg.end();
@@ -30,7 +30,7 @@ t.test('Database', skip, async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
     const db = await pg.db();
     const results = await db.query`SELECT 1 AS one, 2 AS two, 3 AS three`;
-    t.equal(results.rowCount, 1);
+    t.equal(results.count, 1);
     t.same(results, [{one: 1, two: 2, three: 3}]);
     const results2 = await db.query`SELECT 1 AS one`;
     t.same(results2, [{one: 1}]);

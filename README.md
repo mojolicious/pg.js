@@ -177,6 +177,13 @@ for await (const message of db) {
   break;
 }
 await db.unlisten('foo');
+
+// Use event to handle incoming notifications
+await db.listen('bar');
+db.on('notification', (message) => {
+  console.log(`${message.channel}: ${message.payload}`);
+});
+await db.unlisten('bar');
 ```
 
 ### Future

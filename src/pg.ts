@@ -105,7 +105,9 @@ export default class Pg extends Base {
    * Perform SQL query.
    */
   async query(parts: TemplateStringsArray, ...values: any[]): Promise<Results> {
-    return new Results(await this.pool.query(this.sql(parts, ...values).toQuery()));
+    const result = await this.pool.query(this.sql(parts, ...values).toQuery());
+    const rows = result.rows;
+    return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
   }
 
   /**

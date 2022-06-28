@@ -17,11 +17,11 @@ t.test('Database', skip, async t => {
 
     const results = await pg.query`SELECT 1 AS one, 2 AS two, 3 AS three`;
     t.equal(results.rowCount, 1);
-    t.same(results.all, [{one: 1, two: 2, three: 3}]);
+    t.same(results, [{one: 1, two: 2, three: 3}]);
 
     const results2 = await pg.query`SELECT 1, 2, 3`;
     t.equal(results2.rowCount, 1);
-    t.same(results2.all, [{'?column?': 3}]);
+    t.same(results2, [{'?column?': 3}]);
 
     await pg.end();
   });
@@ -31,9 +31,9 @@ t.test('Database', skip, async t => {
     const db = await pg.db();
     const results = await db.query`SELECT 1 AS one, 2 AS two, 3 AS three`;
     t.equal(results.rowCount, 1);
-    t.same(results.all, [{one: 1, two: 2, three: 3}]);
+    t.same(results, [{one: 1, two: 2, three: 3}]);
     const results2 = await db.query`SELECT 1 AS one`;
-    t.same(results2.all, [{one: 1}]);
+    t.same(results2, [{one: 1}]);
     await db.release();
     await pg.end();
   });
@@ -42,7 +42,7 @@ t.test('Database', skip, async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
     pg.searchPath = ['$user', 'foo', 'bar'];
     const results = await pg.query`SHOW search_path`;
-    t.same(results.all, [{search_path: '"$user", foo, bar'}]);
+    t.same(results, [{search_path: '"$user", foo, bar'}]);
     await pg.end();
   });
 
@@ -61,7 +61,7 @@ t.test('Database', skip, async t => {
 
     const all = await Promise.all([pg.query`SELECT 1 AS one`, pg.query`SELECT 2 AS two`, pg.query`SELECT 3 AS three`]);
     t.same(
-      all.map(results => results.all),
+      all.map(results => results),
       [[{one: 1}], [{two: 2}], [{three: 3}]]
     );
 
@@ -80,7 +80,7 @@ t.test('Database', skip, async t => {
       db3.query`SELECT 3 AS three`
     ]);
     t.same(
-      all.map(results => results.all),
+      all.map(results => results),
       [[{one: 1}], [{two: 2}], [{three: 3}]]
     );
 
@@ -93,7 +93,7 @@ t.test('Database', skip, async t => {
   await t.test('JSON', async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
     const results = await pg.query`SELECT ${{test: ['works']}}::JSON AS foo`;
-    t.same(results.all, [{foo: {test: ['works']}}]);
+    t.same(results, [{foo: {test: ['works']}}]);
     await pg.end();
   });
 
@@ -101,7 +101,7 @@ t.test('Database', skip, async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
     const one = pg.sql`AS one`;
     const results = await pg.query`SELECT ${'One'} ${one}, ${2} AS two`;
-    t.same(results.all, [{one: 'One', two: 2}]);
+    t.same(results, [{one: 'One', two: 2}]);
     await pg.end();
   });
 

@@ -18,7 +18,7 @@ const pg = new Pg('postgres://user:password@localhost:5432/database');
 
 // Single query with safe placeholder
 const results = await pg.query`SELECT ${'One'} AS one`;
-for (const row of results.all) {
+for (const row of results) {
   console.log(row.one);
 }
 

@@ -41,7 +41,7 @@ t.test('Migrations', skip, async t => {
     await pg.migrations.migrate();
     t.equal(await pg.migrations.active(), 10);
 
-    t.same((await pg.query`SELECT * FROM migration_test_four`).all, [{test: 10}]);
+    t.same(await pg.query`SELECT * FROM migration_test_four`, [{test: 10}]);
   });
 
   await t.test('Different stntax variations', async t => {
@@ -52,21 +52,21 @@ t.test('Migrations', skip, async t => {
     await pg.migrations.migrate();
     t.same((await pg.tables()).includes('mojo_migrations_test.migration_test_one'), true);
     t.same((await pg.tables()).includes('mojo_migrations_test.migration_test_two'), true);
-    t.same((await pg.query`SELECT * FROM migration_test_one`).all, [{foo: 'works ♥'}]);
+    t.same(await pg.query`SELECT * FROM migration_test_one`, [{foo: 'works ♥'}]);
     t.equal(await pg.migrations.active(), 10);
 
     await pg.migrations.migrate(1);
     t.equal(await pg.migrations.active(), 1);
-    t.same((await pg.query`SELECT * FROM migration_test_one`).all, []);
+    t.same(await pg.query`SELECT * FROM migration_test_one`, []);
 
     await pg.migrations.migrate(3);
     t.equal(await pg.migrations.active(), 3);
-    t.same((await pg.query`SELECT * FROM migration_test_one`).all, [{foo: 'works ♥'}]);
-    t.same((await pg.query`SELECT * FROM migration_test_two`).all, []);
+    t.same(await pg.query`SELECT * FROM migration_test_one`, [{foo: 'works ♥'}]);
+    t.same(await pg.query`SELECT * FROM migration_test_two`, []);
 
     await pg.migrations.migrate(10);
     t.equal(await pg.migrations.active(), 10);
-    t.same((await pg.query`SELECT * FROM migration_test_two`).all, [{bar: 'works too'}]);
+    t.same(await pg.query`SELECT * FROM migration_test_two`, [{bar: 'works too'}]);
 
     await pg.migrations.migrate(0);
     t.equal(await pg.migrations.active(), 0);
@@ -98,7 +98,7 @@ t.test('Migrations', skip, async t => {
     await pg.migrations.migrate();
     t.equal(await pg.migrations.active(), 10);
     t.same((await pg.query`SELECT * FROM migration_test_three`).first, {baz: 'just'});
-    t.same((await pg.query`SELECT * FROM migration_test_three`).all, [{baz: 'just'}, {baz: 'works ♥'}]);
+    t.same(await pg.query`SELECT * FROM migration_test_three`, [{baz: 'just'}, {baz: 'works ♥'}]);
     t.same((await pg.query`SELECT * FROM migration_test_three`).last, {baz: 'works ♥'});
 
     await pg.migrations.migrate(0);
@@ -150,7 +150,7 @@ t.test('Migrations', skip, async t => {
     await pg2.migrations.migrate(2);
     t.same((await pg2.tables()).includes('mojo_migrations_test.migration_test_three'), true);
     t.equal(await pg2.migrations.active(), 2);
-    t.same((await pg2.query`SELECT * FROM migration_test_three`).all, [{baz: 'just'}, {baz: 'works ♥'}]);
+    t.same(await pg2.query`SELECT * FROM migration_test_three`, [{baz: 'just'}, {baz: 'works ♥'}]);
 
     let result;
     try {

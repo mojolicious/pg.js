@@ -94,7 +94,9 @@ class Database extends Base {
    * Perform SQL query.
    */
   async query(parts: TemplateStringsArray, ...values: any[]): Promise<Results> {
-    return new Results(await this.client.query(this.sql(parts, ...values).toQuery()));
+    const result = await this.client.query(this.sql(parts, ...values).toQuery());
+    const rows = result.rows;
+    return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
   }
 
   /**
@@ -114,7 +116,7 @@ class Database extends Base {
     const results = await this.query`
       SELECT schemaname, tablename FROM pg_catalog.pg_tables
       WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`;
-    return results.all.map(row => `${row.schemaname}.${row.tablename}`);
+    return results.map(row => `${row.schemaname}.${row.tablename}`);
   }
 
   /**

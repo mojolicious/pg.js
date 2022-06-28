@@ -1,41 +1,41 @@
-import type {QueryResult} from 'pg';
+const kRowCount = Symbol('rowCount');
 
 /**
  * PostgreSQL query result class.
  */
-export class Results {
-  _results: QueryResult;
+export class Results extends Array {
+  [kRowCount]: number | null = null;
 
-  constructor(result: QueryResult) {
-    this._results = result;
+  constructor(rowCount: number | null, ...values: any[]) {
+    super(...values);
+    this[kRowCount] = rowCount;
   }
 
   /**
    * Get all returned rows.
    */
-  get all(): Array<Record<string, any>> {
-    return this._results.rows;
+  get all(): this {
+    return this;
   }
 
   /**
    * Get first returned row.
    */
   get first(): Record<string, any> | null {
-    return this._results.rows[0] ?? null;
+    return this[0] ?? null;
   }
 
   /**
    * Get last returned row.
    */
   get last(): Record<string, any> | null {
-    const rows = this._results.rows;
-    return rows.length > 0 ? rows[rows.length - 1] : null;
+    return this.length > 0 ? this[this.length - 1] : null;
   }
 
   /**
    * Get number of rows affected by query.
    */
-  get rowCount(): number {
-    return this._results.rowCount;
+  get rowCount(): number | null {
+    return this[kRowCount];
   }
 }

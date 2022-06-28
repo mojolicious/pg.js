@@ -18,6 +18,24 @@ t.test('Database', skip, async t => {
     await pg.end();
   });
 
+  await t.test('Close connection', async t => {
+    const pg = new Pg(process.env.TEST_ONLINE);
+
+    const db = await pg.db();
+    let count = 0;
+    db.on('end', () => count++);
+    await db.release();
+    t.equal(count, 0);
+
+    const db2 = await pg.db();
+    db2.on('end', () => count++);
+    await db2.end();
+    t.equal(count, 1);
+    await db2.release();
+
+    await pg.end();
+  });
+
   await t.test('Backend process id', async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
     const db = await pg.db();

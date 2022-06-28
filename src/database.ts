@@ -64,6 +64,13 @@ class Database extends Base {
   }
 
   /**
+   * Close database connection.
+   */
+  async end(): Promise<void> {
+    await (this.client as any).end();
+  }
+
+  /**
    * Listen for notifications.
    */
   async listen(channel: string): Promise<void> {

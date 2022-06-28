@@ -93,10 +93,10 @@ class Database extends Base {
   }
 
   /**
-   * Get backedn process id.
+   * Get backend process id.
    */
   async pid(): Promise<number> {
-    return (await this.query<PidResult>`select pg_backend_pid()`)[0]?.pg_backend_pid;
+    return (await this.query<PidResult>`SELECT pg_backend_pid()`)[0].pg_backend_pid;
   }
 
   /**

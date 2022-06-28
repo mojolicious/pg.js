@@ -12,6 +12,10 @@ interface Step {
   version: number;
 }
 
+interface VersionResult {
+  version: number;
+}
+
 type Steps = Step[];
 
 const DEBUG = process.env.MOJO_MIGRATIONS_DEBUG === '1';
@@ -180,7 +184,7 @@ export class Migrations {
 
   async _active(db: Database): Promise<number> {
     try {
-      const results = await db.query`SELECT version FROM mojo_migrations WHERE name = ${this.name}`;
+      const results = await db.query<VersionResult>`SELECT version FROM mojo_migrations WHERE name = ${this.name}`;
       const first = results.first;
       return first === null ? 0 : first.version;
     } catch (error: any) {

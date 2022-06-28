@@ -15,6 +15,15 @@ declare interface Database {
   emit: <T extends keyof DatabaseEvents>(event: T, ...args: Parameters<DatabaseEvents[T]>) => boolean;
 }
 
+interface PidResult {
+  pg_backend_pid: number;
+}
+
+interface TablesResult {
+  schemaname: string;
+  tablename: string;
+}
+
 /**
  * PostgreSQL database connection class.
  */
@@ -87,13 +96,13 @@ class Database extends Base {
    * Get backedn process id.
    */
   async pid(): Promise<number> {
-    return (await this.query`select pg_backend_pid()`).first?.pg_backend_pid;
+    return (await this.query<PidResult>`select pg_backend_pid()`)[0]?.pg_backend_pid;
   }
 
   /**
    * Perform SQL query.
    */
-  async query(parts: TemplateStringsArray, ...values: any[]): Promise<Results> {
+  async query<T extends Record<string, any>>(parts: TemplateStringsArray, ...values: any[]): Promise<Results<T>> {
     const result = await this.client.query(this.sql(parts, ...values).toQuery());
     const rows = result.rows;
     return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
@@ -113,7 +122,7 @@ class Database extends Base {
    * Get all non-system tables.
    */
   async tables(): Promise<string[]> {
-    const results = await this.query`
+    const results = await this.query<TablesResult>`
       SELECT schemaname, tablename FROM pg_catalog.pg_tables
       WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'`;
     return results.map(row => `${row.schemaname}.${row.tablename}`);

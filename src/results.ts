@@ -3,7 +3,7 @@ const kRowCount = Symbol('rowCount');
 /**
  * PostgreSQL query result class.
  */
-export class Results extends Array {
+export class Results<T> extends Array<T> {
   [kRowCount]: number | null = null;
 
   constructor(rowCount: number | null, ...values: any[]) {
@@ -12,23 +12,16 @@ export class Results extends Array {
   }
 
   /**
-   * Get all returned rows.
-   */
-  get all(): this {
-    return this;
-  }
-
-  /**
    * Get first returned row.
    */
-  get first(): Record<string, any> | null {
+  get first(): T | null {
     return this[0] ?? null;
   }
 
   /**
    * Get last returned row.
    */
-  get last(): Record<string, any> | null {
+  get last(): T | null {
     return this.length > 0 ? this[this.length - 1] : null;
   }
 

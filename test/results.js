@@ -26,16 +26,16 @@ t.test('Results', skip, async t => {
   });
 
   await t.test('Result methods', async t => {
-    t.same((await db.query`SELECT * FROM results_test`).all, [
+    t.same(await db.query`SELECT * FROM results_test`, [
       {id: 1, name: 'foo'},
       {id: 2, name: 'bar'}
     ]);
     t.same((await db.query`SELECT * FROM results_test`).first, {id: 1, name: 'foo'});
     t.same((await db.query`SELECT * FROM results_test`).last, {id: 2, name: 'bar'});
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).all, []);
+    t.same(await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`, []);
     t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).first, null);
     t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).last, null);
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'bar'}`).all, [{id: 2, name: 'bar'}]);
+    t.same(await db.query`SELECT * FROM results_test WHERE name = ${'bar'}`, [{id: 2, name: 'bar'}]);
     t.same((await db.query`SELECT * FROM results_test`).rowCount, 2);
     t.same((await db.query`SHOW SERVER_VERSION`).rowCount, null);
   });
@@ -53,7 +53,7 @@ t.test('Results', skip, async t => {
     } finally {
       await tx.rollback();
     }
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'tx1'}`).all, [
+    t.same(await db.query`SELECT * FROM results_test WHERE name = ${'tx1'}`, [
       {id: 3, name: 'tx1'},
       {id: 4, name: 'tx1'}
     ]);
@@ -65,7 +65,7 @@ t.test('Results', skip, async t => {
     } finally {
       await tx2.rollback();
     }
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'tx1'}`).all, [
+    t.same(await db.query`SELECT * FROM results_test WHERE name = ${'tx1'}`, [
       {id: 3, name: 'tx1'},
       {id: 4, name: 'tx1'}
     ]);
@@ -83,7 +83,7 @@ t.test('Results', skip, async t => {
       await tx3.rollback();
     }
     t.match(result.message, /does_not_exist/);
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'tx1'}`).all, [
+    t.same(await db.query`SELECT * FROM results_test WHERE name = ${'tx1'}`, [
       {id: 3, name: 'tx1'},
       {id: 4, name: 'tx1'}
     ]);

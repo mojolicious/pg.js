@@ -32,6 +32,22 @@ await db.release();
 Tagged template literals are used everywhere to protect from SQL injection attacks and to make syntax highlighting
 easy.
 
+### TypeScript
+
+TypeScript is fully supported, just pass along a type with your query.
+
+```ts
+interface User {
+  id: number;
+  name: string;
+}
+
+const results = await pg.query<User>`SELECT * FROM users`;
+for (const {id, name} of results) {
+  console.log(`${id}: ${name}`);
+}
+```
+
 ### SQL building
 
 For easier SQL query building with partials, there are also `pg.sql` and `db.sql` tagged template literals. They can be

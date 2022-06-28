@@ -8,7 +8,8 @@
 [![Coverage Status](https://coveralls.io/repos/github/mojolicious/pg.js/badge.svg?branch=main)](https://coveralls.io/github/mojolicious/pg.js?branch=main)
 [![npm](https://img.shields.io/npm/v/@mojojs/pg.svg)](https://www.npmjs.com/package/@mojojs/pg)
 
-A tiny wrapper around [pg](https://www.npmjs.com/package/pg) with some very convenient APIs. Written in TypeScript.
+A tiny wrapper around [pg](https://www.npmjs.com/package/pg) that makes [PostgreSQL](http://www.postgresql.org/) a lot
+of fun to use. Written in TypeScript.
 
 ```js
 import Pg from '@mojojs/pg';

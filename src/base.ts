@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import {Fragment} from './fragment.js';
+import {Statement} from './statement.js';
 import {escapeIdentifier, escapeLiteral} from './util.js';
 
 export class Base extends EventEmitter {
@@ -20,14 +20,14 @@ export class Base extends EventEmitter {
   /**
    * Create new SQL query or partial query.
    */
-  sql(parts: TemplateStringsArray, ...values: any[]): Fragment {
-    return Fragment.sql(parts, ...values);
+  sql(parts: TemplateStringsArray, ...values: any[]): Statement {
+    return Statement.sql(parts, ...values);
   }
 
   /**
    * Create new SQL query or partial query without safe placeholders.
    */
-  sqlUnsafe(parts: TemplateStringsArray, ...values: any[]): Fragment {
-    return Fragment.sqlUnsafe(parts, ...values);
+  sqlUnsafe(parts: TemplateStringsArray, ...values: any[]): Statement {
+    return Statement.sqlUnsafe(parts, ...values);
   }
 }

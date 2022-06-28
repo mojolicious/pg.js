@@ -1,9 +1,9 @@
 import type {Query} from './types.js';
 
 /**
- * SQL fragment class.
+ * SQL statement class.
  */
-export class Fragment {
+export class Statement {
   parts: string[] = [];
   values: any[] = [];
 
@@ -24,7 +24,7 @@ export class Fragment {
       if (parts[i + 1] === undefined) continue;
 
       const value = values[i];
-      if (value instanceof Fragment) {
+      if (value instanceof Statement) {
         const valueParts = value.parts;
         const index = mergedParts.length - 1;
         mergedParts[index] = mergedParts[index] + valueParts[0];
@@ -40,31 +40,31 @@ export class Fragment {
   /**
    * Create new SQL query or partial query.
    */
-  static sql(parts: TemplateStringsArray, ...values: any[]): Fragment {
-    return new Fragment(parts, values);
+  static sql(parts: TemplateStringsArray, ...values: any[]): Statement {
+    return new Statement(parts, values);
   }
 
   /**
    * Create new SQL query or partial query without safe placeholders.
    */
-  static sqlUnsafe(parts: TemplateStringsArray, ...values: any[]): Fragment {
+  static sqlUnsafe(parts: TemplateStringsArray, ...values: any[]): Statement {
     const merged: string[] = [];
     for (let i = 0; i < parts.length; i++) {
       merged.push(parts[i]);
       if (values[i] !== undefined) merged.push(values[i]);
     }
-    return new Fragment([merged.join('')], []);
+    return new Statement([merged.join('')], []);
   }
 
   /**
-   * Convert SQL fragment to query with placeholders.
+   * Convert SQL statement to query with placeholders.
    */
   toQuery(): Query {
     return {text: this.toString(), values: this.values};
   }
 
   /**
-   * Convert SQL fragment to string.
+   * Convert SQL statement to string.
    */
   toString(): string {
     const query = [];

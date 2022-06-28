@@ -113,11 +113,11 @@ import Path from '@mojojs/path';
 await pg.migrations.fromFile(Path.currentFile().sibling('migrations', 'myapp.sql'), {name: 'myapp'});
 await pg.migrations.migrate();
 
-// Use migrations to drop and recreate the table
+// Use migrations to drop and recreate the schema
 await pg.migrations.migrate(0);
 await pg.migrations.migrate();
 
-// Load mogrations from a string
+// Load migrations from a string
 pg.migrations.fromString('-- 1 up\n...', {name: 'my_other_app'});
 
 // Load migrations from a directory

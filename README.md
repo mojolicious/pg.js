@@ -171,7 +171,7 @@ it as soon as the `using` keyword is available in Node.js.
 
 ```js
 // Multiple queries on the same connection (with automatic resource management)
-using const db = await pg.db();
+using await const db = await pg.db();
 const results = await db.query`SELECT 2`;
 const results = await db.query`SELECT 3`;
 ```

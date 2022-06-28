@@ -76,7 +76,7 @@ But make sure to use methods like `pg.escapeLiteral()` to escape unsafe values y
 ### Transactions
 
 It's best to use `try`/`finally` blocks whenever you dequeue a connection with `pg.db()`, to ensure efficient resource
-mangement.
+management.
 
 ```js
 try {

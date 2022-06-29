@@ -1,0 +1,5 @@
+% view.layout = 'blog';
+% stash.title = 'Edit post';
+<h2>Edit post</h2>
+%= await ctx.include({view: 'posts/_form'}, {caption: 'Update', target: ['update_post', {values: {id}}]})
+%= ctx.buttonTo(['remove_post', {values: {id}}], {}, 'Remove')

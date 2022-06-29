@@ -1,0 +1,5 @@
+% view.layout = 'blog';
+% stash.title = post.title;
+<h2><%= post.title %></h2>
+<p><%= post.body %></p>
+%= ctx.linkTo(['edit_post', {values: {id: post.id}}], {}, 'Edit')

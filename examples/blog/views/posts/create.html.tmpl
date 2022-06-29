@@ -1,0 +1,4 @@
+% view.layout = 'blog';
+% stash.title = 'New post';
+<h2>New post</h2>
+%= await ctx.include({view: 'posts/_form'}, {caption: 'Create', target: 'store_post'})

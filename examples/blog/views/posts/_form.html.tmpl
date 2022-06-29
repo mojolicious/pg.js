@@ -1,0 +1,12 @@
+<{formBlock}>
+  <label for="title">Title</label>
+  <br>
+  %= await ctx.textFieldTag('title', {value: post.title});
+  <br>
+  <label for="body">Body</label>
+  <br>
+  %= await ctx.textAreaTag('body', {}, post.body)
+  <br>
+  %= ctx.submitButtonTag(caption)
+<{/formBlock}>
+%= ctx.formFor(target, {}, await formBlock())

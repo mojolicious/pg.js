@@ -187,6 +187,12 @@ db.on('notification', (message) => {
 await db.unlisten('bar');
 ```
 
+### Examples
+
+This distribution also contains a great example you can use for inspiration. The well-structured
+[blog](https://github.com/mojolicious/pg.js/tree/main/examples/blog) application will show you how to apply the MVC
+design pattern in practice.
+
 ### Future
 
 This package is designed to be compatible with the

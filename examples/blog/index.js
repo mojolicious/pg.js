@@ -7,7 +7,7 @@ app.plugin(yamlConfigPlugin);
 app.secrets = app.config.secrets;
 
 app.addAppHook('app:start', async app => {
-  if (app.models.pg === undefined) app.models.pg = new Pg(app.config.pg, {allowExitOnIdle: true});
+  if (app.models.pg === undefined) app.models.pg = new Pg(app.config.pg);
   app.models.posts = new Posts(app.models.pg);
 
   const migrations = app.models.pg.migrations;

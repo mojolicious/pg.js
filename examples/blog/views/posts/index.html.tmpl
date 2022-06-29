@@ -1,9 +1,9 @@
 % view.layout = 'blog';
 % stash.title = 'Blog';
 % for (const post of posts) {
-  <h2><%= ctx.linkTo(['show_post', {values: {id: post.id}}], {}, post.title) %></h2>
+  <h2><%= ctx.linkTo(['show_post', {values: {id: post.id}}], {class: 'blog-title'}, post.title) %></h2>
   <p>
     %= post.body
   </p>
 % }
-%= ctx.linkTo('create_post', {}, 'New post')
+%= ctx.linkTo('create_post', {class: 'blog-action'}, 'New post')

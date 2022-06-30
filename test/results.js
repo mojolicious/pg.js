@@ -40,6 +40,17 @@ t.test('Results', skip, async t => {
     t.same((await db.query`SHOW SERVER_VERSION`).count, null);
   });
 
+  await t.test('Shared connection cache', async () => {
+    const pg2 = new Pg(pg);
+
+    const db = await pg2.db();
+    t.same((await db.query`SELECT * FROM results_test`).first, {id: 1, name: 'foo'});
+    t.same((await db.query`SELECT * FROM results_test`).last, {id: 2, name: 'bar'});
+    await db.release();
+
+    await pg2.end();
+  });
+
   await t.test('JSON', async t => {
     t.same((await db.query`SELECT ${{bar: 'baz'}}::JSON AS foo`).first, {foo: {bar: 'baz'}});
   });

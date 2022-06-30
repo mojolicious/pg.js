@@ -5,9 +5,13 @@ import {Results} from './results.js';
 import {urlSplit} from '@mojojs/util';
 import pg from 'pg';
 
-interface PgOptions {
+export type PgConfig = string | pg.PoolConfig | Pg;
+
+export interface PgOptions extends pg.PoolConfig {
   searchPath?: string[];
 }
+
+export type {Results};
 
 /**
  * PostgreSQL pool class.
@@ -23,20 +27,26 @@ export default class Pg extends Base {
   searchPath: string[] = [];
 
   _migrations: Migrations | undefined;
+  _doNotEnd = false;
 
-  constructor(config: string | pg.PoolConfig, options: PgOptions & pg.PoolConfig = {}) {
+  constructor(config: PgConfig, options: PgOptions = {}) {
     super();
 
-    const parsedConfig = Pg.parseConfig(config);
-    const pool = new pg.Pool({allowExitOnIdle: true, ...options, ...parsedConfig});
-    this.pool = pool;
+    if (config instanceof Pg) {
+      this.pool = config.pool;
+      this._doNotEnd = true;
+    } else {
+      const parsedConfig = Pg.parseConfig(config);
+      const pool = new pg.Pool({allowExitOnIdle: true, ...options, ...parsedConfig});
+      this.pool = pool;
+    }
 
     if (options.searchPath !== undefined) this.searchPath = options.searchPath;
 
     // Convert BIGINT to number (even if not all 64bit are usable)
     pg.types.setTypeParser(20, parseInt);
 
-    pool.on('connect', client => {
+    this.pool.on('connect', client => {
       if (this.searchPath.length > 0) {
         const searchPath = this.searchPath.map(path => client.escapeIdentifier(path)).join(', ');
         client.query(`SET search_path TO ${searchPath}`);
@@ -56,7 +66,7 @@ export default class Pg extends Base {
    * Close all database connections in the pool.
    */
   async end(): Promise<void> {
-    await this.pool.end();
+    if (this._doNotEnd === false) await this.pool.end();
   }
 
   /**

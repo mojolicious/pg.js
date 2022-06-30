@@ -26,7 +26,7 @@ export default class PostsController {
 
   async store(ctx) {
     const post = (await ctx.params()).toObject();
-    if (_validate(ctx, post) === false) return ctx.render('posts/create', {post});
+    if (_validate(ctx, post) === false) return ctx.render({view: 'posts/create'}, {post});
 
     const id = await ctx.models.posts.add(post);
     await ctx.redirectTo('show_post', {values: {id}});
@@ -34,7 +34,7 @@ export default class PostsController {
 
   async update(ctx) {
     const post = (await ctx.params()).toObject();
-    if (_validate(ctx, post) === false) return ctx.render('posts/edit', {post});
+    if (_validate(ctx, post) === false) return ctx.render({view: 'posts/edit'}, {post});
 
     const id = ctx.stash.id;
     await ctx.models.posts.save(id, post);

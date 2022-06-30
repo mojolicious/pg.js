@@ -11,7 +11,7 @@ export interface PgOptions extends pg.PoolConfig {
   searchPath?: string[];
 }
 
-export type {Results};
+export type {Database, Migrations, Results};
 
 /**
  * PostgreSQL pool class.

@@ -36,9 +36,7 @@ export default class Pg extends Base {
       this.pool = config.pool;
       this._doNotEnd = true;
     } else {
-      const parsedConfig = Pg.parseConfig(config);
-      const pool = new pg.Pool({allowExitOnIdle: true, ...options, ...parsedConfig});
-      this.pool = pool;
+      this.pool = new pg.Pool({allowExitOnIdle: true, ...options, ...Pg.parseConfig(config)});
     }
 
     if (options.searchPath !== undefined) this.searchPath = options.searchPath;

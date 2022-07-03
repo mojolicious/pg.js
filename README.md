@@ -77,7 +77,7 @@ And if you want to do complex things like reusing the same placeholder in multip
 `pg.rawQuery()` and `db.rawQuery()` available.
 
 ```js
-const results = await pg.rawQuery({text: 'SELECT * FROM users WHERE name = $1 AND login = $1', values: ['Sara']});
+const results = await pg.rawQuery('SELECT * FROM users WHERE name = $1 AND login = $1', 'Sara');
 ```
 
 ### Transactions

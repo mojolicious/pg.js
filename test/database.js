@@ -143,6 +143,8 @@ t.test('Database', skip, async t => {
     t.same(results, [{one: 'One'}]);
     const results2 = await pg.rawQuery({text: 'SELECT $1 AS one', values: ['One'], rowMode: 'array'});
     t.same(results2, [['One']]);
+    const results3 = await pg.rawQuery('SELECT $1 AS one', 'One');
+    t.same(results3, [{one: 'One'}]);
     await pg.end();
   });
 
@@ -153,6 +155,8 @@ t.test('Database', skip, async t => {
     t.same(results, [{one: 'One'}]);
     const results2 = await db.rawQuery({text: 'SELECT $1 AS one', values: ['One'], rowMode: 'array'});
     t.same(results2, [['One']]);
+    const results3 = await db.rawQuery('SELECT $1 AS one', 'One');
+    t.same(results3, [{one: 'One'}]);
     await db.release();
     await pg.end();
   });

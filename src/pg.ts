@@ -130,13 +130,17 @@ export default class Pg extends Base {
   /**
    * Perform raw SQL query.
    * @example
-   * // Query with placeholder
-   * const results = await pg.rawQuery({text: 'SELECT * FROM users WHERE name = $1', values: ['Sara']});
+   * // Simple query with placeholder
+   * const results = await pg.rawQuery('SELECT * FROM users WHERE name = $1', 'Sara'});
    *
    * // Query with result type
-   * const results = await pg.rawQuery<User>({text: 'SELECT * FROM users'});
+   * const results = await db.rawQuery<User>('SELECT * FROM users');
+   *
+   * // Query with results as arrays
+   * const results = await pg.rawQuery({text: 'SELECT * FROM users', rowMode: 'array'});
    */
-  async rawQuery<T = any>(query: pg.QueryConfig): Promise<Results<T>> {
+  async rawQuery<T = any>(query: string | pg.QueryConfig, ...values: any[]): Promise<Results<T>> {
+    if (typeof query === 'string') query = {text: query, values};
     if (DEBUG === true) process.stderr.write(`-- Query\n${query.text}\n`);
     const result = await this.pool.query(query);
     const rows = result.rows;

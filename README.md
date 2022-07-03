@@ -187,6 +187,16 @@ db.on('notification', (message) => {
 await db.unlisten('bar');
 ```
 
+### Introspection
+
+You can set the `MOJO_PG_DEBUG` environment variable to get all SQL queries printed to `STDERR`.
+
+```
+$ MOJO_CLIENT_DEBUG=1 node myapp.js
+-- Query
+INSERT INTO users (name) VALUES ($1)
+```
+
 ### Examples
 
 This distribution also contains a great example you can use for inspiration. The well-structured

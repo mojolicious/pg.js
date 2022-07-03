@@ -13,6 +13,8 @@ export interface PgOptions extends pg.PoolConfig {
 
 export type {Database, Migrations, Results};
 
+const DEBUG = process.env.MOJO_PG_DEBUG === '1';
+
 /**
  * PostgreSQL pool class.
  */
@@ -116,7 +118,9 @@ export default class Pg extends Base {
    * Perform SQL query.
    */
   async query<T extends Record<string, any>>(parts: TemplateStringsArray, ...values: any[]): Promise<Results<T>> {
-    const result = await this.pool.query(this.sql(parts, ...values).toQuery());
+    const query = this.sql(parts, ...values).toQuery();
+    if (DEBUG === true) process.stderr.write(`-- Query\n${query.text}\n`);
+    const result = await this.pool.query(query);
     const rows = result.rows;
     return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
   }

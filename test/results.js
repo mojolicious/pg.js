@@ -33,8 +33,8 @@ t.test('Results', skip, async t => {
     t.same((await db.query`SELECT * FROM results_test`).first, {id: 1, name: 'foo'});
     t.same((await db.query`SELECT * FROM results_test`).last, {id: 2, name: 'bar'});
     t.same(await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`, []);
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).first, null);
-    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).last, null);
+    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).first, undefined);
+    t.same((await db.query`SELECT * FROM results_test WHERE name = ${'baz'}`).last, undefined);
     t.same(await db.query`SELECT * FROM results_test WHERE name = ${'bar'}`, [{id: 2, name: 'bar'}]);
     t.same((await db.query`SELECT * FROM results_test`).count, 2);
     t.same((await db.query`SHOW SERVER_VERSION`).count, null);

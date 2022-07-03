@@ -21,14 +21,14 @@ export class Results<T> extends Array<T> {
   /**
    * Get first returned row.
    */
-  get first(): T | null {
-    return this[0] ?? null;
+  get first(): T {
+    return this[0];
   }
 
   /**
    * Get last returned row.
    */
-  get last(): T | null {
-    return this.length > 0 ? this[this.length - 1] : null;
+  get last(): T {
+    return this[this.length - 1];
   }
 }

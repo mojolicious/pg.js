@@ -186,7 +186,7 @@ export class Migrations {
     try {
       const results = await db.query<VersionResult>`SELECT version FROM mojo_migrations WHERE name = ${this.name}`;
       const first = results.first;
-      return first === null ? 0 : first.version;
+      return first === undefined ? 0 : first.version;
     } catch (error: any) {
       if (error.code !== '42P01') throw error;
     }

@@ -18,6 +18,14 @@ t.test('Debug', skip, async t => {
       {stderr: true, stdout: false}
     );
     t.match(output.toString(), /SELECT 1 AS one/s);
+
+    const output2 = await captureOutput(
+      async () => {
+        await pg.rawQuery({text: 'SELECT 2 AS two'});
+      },
+      {stderr: true, stdout: false}
+    );
+    t.match(output2.toString(), /SELECT 2 AS two/s);
   });
 
   await t.test('Select (with database object)', async t => {
@@ -30,6 +38,16 @@ t.test('Debug', skip, async t => {
       {stderr: true, stdout: false}
     );
     t.match(output.toString(), /SELECT 2 AS two/s);
+
+    const output2 = await captureOutput(
+      async () => {
+        const db = await pg.db();
+        await db.rawQuery({text: 'SELECT 1 AS one'});
+        await db.release();
+      },
+      {stderr: true, stdout: false}
+    );
+    t.match(output2.toString(), /SELECT 1 AS one/s);
   });
 
   await pg.end();

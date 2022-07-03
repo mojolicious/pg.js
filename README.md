@@ -35,7 +35,7 @@ easy.
 
 ### TypeScript
 
-TypeScript is fully supported, just pass along a type with your query.
+TypeScript is fully supported, just pass along a type with your query. This works for all query methods.
 
 ```ts
 interface User {
@@ -63,7 +63,8 @@ const results = await pg.query`SELECT * FROM users WHERE name = ${name} ${partia
 ```
 
 But if you need a little more control over the generated SQL query, you can of course also bypass safety features with
-the tagged template literals `pg.sqlUnsafe` and `db.sqlUnsafe`.
+the tagged template literals `pg.sqlUnsafe` and `db.sqlUnsafe`. But make sure to use methods like `pg.escapeLiteral()`
+to escape unsafe values yourself.
 
 ```js
 const role = 'role = ' + pg.escapeLiteral('power user');
@@ -72,7 +73,12 @@ const name = 'root';
 const results = await pg.query`SELECT * FROM users WHERE name = ${name} ${partialQuery}`;
 ```
 
-But make sure to use methods like `pg.escapeLiteral()` to escape unsafe values yourself.
+And if you want to do complex things like reusing the same placeholder in multiple places, there is also
+`pg.rawQuery()` and `db.rawQuery()` available.
+
+```js
+const results = await pg.rawQuery({text: 'SELECT * FROM users WHERE name = $1 AND login = $1', values: ['Sara']});
+```
 
 ### Transactions
 

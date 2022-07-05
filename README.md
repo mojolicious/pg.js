@@ -201,7 +201,7 @@ originated from.
 
 ```
 $ node sql-error.js
-/Users/sri/repo/pg.js/node_modules/pg-protocol/dist/parser.js:287
+/home/sri/pg.js/node_modules/pg-protocol/dist/parser.js:287
         const message = name === 'notice' ? new messages_1.NoticeMessage(length, messageValue) : new messages_1.DatabaseError(messageValue, length, name);
                                                                                                  ^
 

@@ -193,6 +193,37 @@ db.on('notification', (message) => {
 await db.unlisten('bar');
 ```
 
+### Errors
+
+Since the default exceptions thrown by [pg](https://www.npmjs.com/package/pg) for query errors are often not very
+helpful, we expand them with context information, like the position in the SQL query and the file/line the query
+originated from.
+
+```
+$ node sql-error.js
+/Users/sri/repo/pg.js/node_modules/pg-protocol/dist/parser.js:287
+        const message = name === 'notice' ? new messages_1.NoticeMessage(length, messageValue) : new messages_1.DatabaseError(messageValue, length, name);
+                                                                                                 ^
+
+error: relation "users" does not exist
+Line 1: SELECT * FROM users
+                      ^ at sql-error.js line 4
+
+    at Parser.parseErrorMessage (/home/sri/pg.js/node_modules/pg-protocol/dist/parser.js:287:98)
+    at Parser.handlePacket (/home/sri/pg.js/node_modules/pg-protocol/dist/parser.js:126:29)
+    at Parser.parse (/home/sri/pg.js/node_modules/pg-protocol/dist/parser.js:39:38)
+    at Socket.<anonymous> (/home/sri/pg.js/node_modules/pg-protocol/dist/index.js:11:42)
+    at Socket.emit (node:events:537:28)
+    at addChunk (node:internal/streams/readable:324:12)
+    at readableAddChunk (node:internal/streams/readable:297:9)
+    at Readable.push (node:internal/streams/readable:234:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23) {
+  length: 104,
+  severity: 'ERROR',
+  code: '42P01',
+...
+```
+
 ### Introspection
 
 You can set the `MOJO_PG_DEBUG` environment variable to get all SQL queries printed to `STDERR`.

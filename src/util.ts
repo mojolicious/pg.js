@@ -1,4 +1,5 @@
 import type {QueryConfig} from 'pg';
+import Path from '@mojojs/path';
 import StackUtils from 'stack-utils';
 
 /**
@@ -71,8 +72,9 @@ export function throwWithContext(error: any, query: QueryConfig): never {
       for (let i = 2; i < stack.length; i++) {
         const file = stack[i].getFileName();
         if (file !== undefined && /^node:/.test(file) === false && file !== startFile) {
+          const relative = new Path().relative(Path.fromFileURL(file));
           const line = stack[i].getLineNumber();
-          pointer += ` at ${file} line ${line}`;
+          pointer += ` at ${relative} line ${line}`;
           break;
         }
       }

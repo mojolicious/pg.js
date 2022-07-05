@@ -61,5 +61,17 @@ t.test('Connections', t => {
     t.end();
   });
 
+  t.test('Invalid connection string', t => {
+    let result;
+    try {
+      Pg.parseConfig('http://127.0.0.1');
+    } catch (error) {
+      result = error;
+    }
+    t.match(result.message, /Invalid connection string/);
+
+    t.end();
+  });
+
   t.end();
 });

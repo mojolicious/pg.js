@@ -3,6 +3,7 @@ import {on} from 'events';
 import {Base} from './base.js';
 import {Results} from './results.js';
 import {Transaction} from './transaction.js';
+import {throwWithContext} from './util.js';
 
 interface DatabaseEvents {
   end: (this: Database) => void;
@@ -13,6 +14,10 @@ declare interface Database {
   on: <T extends keyof DatabaseEvents>(event: T, listener: DatabaseEvents[T]) => this;
   once: <T extends keyof DatabaseEvents>(event: T, listener: DatabaseEvents[T]) => this;
   emit: <T extends keyof DatabaseEvents>(event: T, ...args: Parameters<DatabaseEvents[T]>) => boolean;
+}
+
+interface DatabaseOptions {
+  verboseErrors: boolean;
 }
 
 interface PidResult {
@@ -34,12 +39,17 @@ class Database extends Base {
    * PostgreSQL client.
    */
   client: PoolClient;
+  /**
+   * Show SQL context for errors.
+   */
+  verboseErrors = true;
 
   _channels: string[] = [];
 
-  constructor(client: PoolClient) {
+  constructor(client: PoolClient, options: DatabaseOptions) {
     super();
     this.client = client;
+    this.verboseErrors = options.verboseErrors;
     client.on('end', () => this.emit('end'));
     client.on('notification', message => this.emit('notification', message));
   }
@@ -136,9 +146,15 @@ class Database extends Base {
   async rawQuery<T = any>(query: string | QueryConfig, ...values: any[]): Promise<Results<T>> {
     if (typeof query === 'string') query = {text: query, values};
     if (DEBUG === true) process.stderr.write(`-- Query\n${query.text}\n`);
-    const result = await this.client.query(query);
-    const rows = result.rows;
-    return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
+
+    try {
+      const result = await this.client.query(query);
+      const rows = result.rows;
+      return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
+    } catch (error) {
+      if (this.verboseErrors === true) throwWithContext(error, query);
+      throw error;
+    }
   }
 
   /**

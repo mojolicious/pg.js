@@ -253,6 +253,60 @@ t.test('Database', skip, async t => {
       ]
     );
 
+    await t.test('Exception with context (ad-hoc)', async t => {
+      const pg = new Pg(process.env.TEST_ONLINE);
+
+      let result;
+      try {
+        await pg.query`
+          SELECT 1 AS one,
+                 2 A two,
+                 3 AS three
+        `;
+      } catch (error) {
+        result = error;
+      }
+      t.match(result.message, /syntax error at or near "two".+Line 3: {18}2 A two,.+\^ at.+database\.js line \d+/s);
+
+      result = undefined;
+      try {
+        await pg.query`SELECT 1 A one`;
+      } catch (error) {
+        result = error;
+      }
+      t.match(result.message, /syntax error at or near "one".+Line 1: SELECT 1 A one.+\^ at.+database\.js line \d+/s);
+
+      await pg.end();
+    });
+
+    await t.test('Exception with context (with database object)', async t => {
+      const pg = new Pg(process.env.TEST_ONLINE);
+      const db = await pg.db();
+
+      let result;
+      try {
+        await db.query`
+          SELECT 1 AS one,
+                 2 A two,
+                 3 AS three
+        `;
+      } catch (error) {
+        result = error;
+      }
+      t.match(result.message, /syntax error at or near "two".+Line 3: {18}2 A two,.+\^ at.+database\.js line \d+/s);
+
+      result = undefined;
+      try {
+        await db.query`SELECT 1 A one`;
+      } catch (error) {
+        result = error;
+      }
+      t.match(result.message, /syntax error at or near "one".+Line 1: SELECT 1 A one.+\^ at.+database\.js line \d+/s);
+
+      await db.release();
+      await pg.end();
+    });
+
     await db.release();
 
     await pg.end();

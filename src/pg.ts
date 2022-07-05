@@ -2,12 +2,14 @@ import {Base} from './base.js';
 import {Database} from './database.js';
 import {Migrations} from './migrations.js';
 import {Results} from './results.js';
+import {throwWithContext} from './util.js';
 import {urlSplit} from '@mojojs/util';
 import pg from 'pg';
 
 export type PgConfig = string | pg.PoolConfig | Pg;
 
 export interface PgOptions extends pg.PoolConfig {
+  verboseErrors?: boolean;
   searchPath?: string[];
 }
 
@@ -27,6 +29,10 @@ export default class Pg extends Base {
    * Search path.
    */
   searchPath: string[] = [];
+  /**
+   * Show SQL context for errors.
+   */
+  verboseErrors = true;
 
   _migrations: Migrations | undefined;
   _doNotEnd = false;
@@ -42,6 +48,7 @@ export default class Pg extends Base {
     }
 
     if (options.searchPath !== undefined) this.searchPath = options.searchPath;
+    if (options.verboseErrors !== undefined) this.verboseErrors = options.verboseErrors;
 
     // Convert BIGINT to number (even if not all 64bit are usable)
     pg.types.setTypeParser(20, parseInt);
@@ -59,7 +66,7 @@ export default class Pg extends Base {
    */
   async db(): Promise<Database> {
     const client = await this.pool.connect();
-    return new Database(client);
+    return new Database(client, {verboseErrors: this.verboseErrors});
   }
 
   /**
@@ -142,9 +149,15 @@ export default class Pg extends Base {
   async rawQuery<T = any>(query: string | pg.QueryConfig, ...values: any[]): Promise<Results<T>> {
     if (typeof query === 'string') query = {text: query, values};
     if (DEBUG === true) process.stderr.write(`-- Query\n${query.text}\n`);
-    const result = await this.pool.query(query);
-    const rows = result.rows;
-    return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
+
+    try {
+      const result = await this.pool.query(query);
+      const rows = result.rows;
+      return rows === undefined ? new Results(result.rowCount) : new Results(result.rowCount, ...rows);
+    } catch (error) {
+      if (this.verboseErrors === true) throwWithContext(error, query);
+      throw error;
+    }
   }
 
   /**

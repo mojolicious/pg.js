@@ -33,6 +33,12 @@ await db.release();
 Tagged template literals are used everywhere to protect from SQL injection attacks and to make syntax highlighting
 easy.
 
+### Examples
+
+This distribution also contains a great example you can use for inspiration. The well-structured
+[blog](https://github.com/mojolicious/pg.js/tree/main/examples/blog) application will show you how to apply the MVC
+design pattern in practice.
+
 ### TypeScript
 
 TypeScript is fully supported, just pass along a type with your query. This works for all query methods.
@@ -233,12 +239,6 @@ $ MOJO_CLIENT_DEBUG=1 node myapp.js
 -- Query
 INSERT INTO users (name) VALUES ($1)
 ```
-
-### Examples
-
-This distribution also contains a great example you can use for inspiration. The well-structured
-[blog](https://github.com/mojolicious/pg.js/tree/main/examples/blog) application will show you how to apply the MVC
-design pattern in practice.
 
 ### Future
 

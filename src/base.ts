@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
-import {Statement} from './statement.js';
 import {escapeIdentifier, escapeLiteral} from './util.js';
+import {Statement} from '@mojojs/sql';
 
 export class Base extends EventEmitter {
   /**

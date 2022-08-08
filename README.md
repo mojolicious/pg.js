@@ -57,8 +57,9 @@ for (const {id, name} of results) {
 
 ### SQL building
 
-For easier SQL query building with partials, there are also `pg.sql` and `db.sql` tagged template literals. They can be
-used recursively to build complex queries securely.
+For easier SQL query building with partials, there are also `pg.sql` and `db.sql` tagged template literals (provided by
+[@mojojs/sql](https://www.npmjs.com/package/@mojojs/sql)). They can be used recursively to build complex queries
+securely.
 
 ```js
 // Build safe SQL query with placeholder and partial SQL query

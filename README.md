@@ -116,7 +116,7 @@ The `tx.rollback()` call does nothing if `tx.commit()` has been called first.
 ### Migrations
 
 To manage your database schema, there is also a minimal SQL based migration system built-in. A migration file is just a
-collection of sql blocks, with one or more statements, separated by comments of the form `-- VERSION UP/DOWN`.
+collection of SQL blocks, with one or more statements, separated by comments of the form `-- VERSION UP/DOWN`.
 
 ```sql
 -- 1 up
@@ -237,8 +237,9 @@ You can set the `MOJO_PG_DEBUG` environment variable to get all SQL queries prin
 
 ```
 $ MOJO_CLIENT_DEBUG=1 node myapp.js
--- Query
+
 INSERT INTO users (name) VALUES ($1)
+...
 ```
 
 ### Future

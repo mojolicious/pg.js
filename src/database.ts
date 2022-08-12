@@ -145,7 +145,7 @@ class Database extends Base {
    */
   async rawQuery<T = any>(query: string | QueryConfig, ...values: any[]): Promise<Results<T>> {
     if (typeof query === 'string') query = {text: query, values};
-    if (DEBUG === true) process.stderr.write(`-- Query\n${query.text}\n`);
+    if (DEBUG === true) process.stderr.write(`\n${query.text}\n`);
 
     try {
       const result = await this.client.query(query);

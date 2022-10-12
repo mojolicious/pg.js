@@ -236,7 +236,7 @@ Line 1: SELECT * FROM users
 You can set the `MOJO_PG_DEBUG` environment variable to get all SQL queries printed to `STDERR`.
 
 ```
-$ MOJO_CLIENT_DEBUG=1 node myapp.js
+$ MOJO_PG_DEBUG=1 node myapp.js
 
 INSERT INTO users (name) VALUES ($1)
 ...

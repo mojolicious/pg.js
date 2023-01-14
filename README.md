@@ -93,8 +93,8 @@ It's best to use `try`/`finally` blocks whenever you dequeue a connection with `
 management.
 
 ```js
+const db = await pg.db();
 try {
-  const db = await pg.db();
   const tx = await db.begin();
 
   try {

@@ -6,7 +6,7 @@ export const app = mojo();
 app.plugin(yamlConfigPlugin);
 app.secrets = app.config.secrets;
 
-app.addAppHook('app:start', async app => {
+app.onStart(async app => {
   if (app.models.pg === undefined) app.models.pg = new Pg(app.config.pg);
   app.models.posts = new Posts(app.models.pg);
 

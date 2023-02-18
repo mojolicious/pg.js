@@ -7,6 +7,6 @@
   <br>
   %= await ctx.textAreaTag('body', {}, post.body)
   <br>
-  %= ctx.submitButtonTag(caption)
+  %= await ctx.submitButtonTag(caption)
 <{/formBlock}>
-%= ctx.formFor(target, {class: 'blog-form'}, await formBlock())
+%= await ctx.formFor(target, {class: 'blog-form'}, await formBlock())

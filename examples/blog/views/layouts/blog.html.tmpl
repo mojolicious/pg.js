@@ -13,7 +13,7 @@
     </style>
   </head>
   <body>
-    <h1><%= await ctx.linkTo('posts', {class: 'blog-title'}, 'Blog') %></h1>
+    <h1><%= await tags.linkTo('posts', {class: 'blog-title'}, 'Blog') %></h1>
     %= ctx.content.main
   </body>
 </html>

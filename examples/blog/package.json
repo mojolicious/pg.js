@@ -6,7 +6,7 @@
     "test": "tap --no-coverage test/*.js"
   },
   "dependencies": {
-    "@mojojs/core": "^1.20.0",
+    "@mojojs/core": "^1.25.0",
     "@mojojs/pg": "^0.2.0"
   },
   "devDependencies": {

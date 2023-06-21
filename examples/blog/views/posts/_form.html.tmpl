@@ -1,12 +1,12 @@
 <{formBlock}>
   <label for="title">Title</label>
   <br>
-  %= await ctx.textFieldTag('title', {value: post.title});
+  %= await tags.textField('title', {value: post.title});
   <br>
   <label for="body">Body</label>
   <br>
-  %= await ctx.textAreaTag('body', {}, post.body)
+  %= await tags.textArea('body', {}, post.body)
   <br>
-  %= await ctx.submitButtonTag(caption)
+  %= await tags.submitButton(caption)
 <{/formBlock}>
-%= await ctx.formFor(target, {class: 'blog-form'}, await formBlock())
+%= await tags.formFor(target, {class: 'blog-form'}, await formBlock())

@@ -10,7 +10,7 @@ interface DatabaseEvents {
   notification: (this: Database, message: Notification) => void;
 }
 
-declare interface Database {
+declare interface DatabaseEventEmitter {
   on: <T extends keyof DatabaseEvents>(event: T, listener: DatabaseEvents[T]) => this;
   once: <T extends keyof DatabaseEvents>(event: T, listener: DatabaseEvents[T]) => this;
   emit: <T extends keyof DatabaseEvents>(event: T, ...args: Parameters<DatabaseEvents[T]>) => boolean;
@@ -34,7 +34,7 @@ const DEBUG = process.env.MOJO_PG_DEBUG === '1';
 /**
  * PostgreSQL database connection class.
  */
-class Database extends Base {
+class Database extends Base implements DatabaseEventEmitter {
   /**
    * PostgreSQL client.
    */

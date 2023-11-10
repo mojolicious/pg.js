@@ -56,11 +56,11 @@ for (const {id, name} of results) {
 ```
 
 All APIs are designed to be compatible with
-[explicit resource management](https://github.com/tc39/proposal-explicit-resource-management) and with TypeScript you
-can already use it in production.
+[explicit resource management](https://github.com/tc39/proposal-explicit-resource-management). And with TypeScript you
+can already use the feature in production.
 
 ```js
-// Automatically release all connections at end of scope
+// Automatically close all connections at end of scope
 await using pg = new Pg('postgres://user:password@localhost:5432/database');
 
 // Automatically release database connection back into the pool for reuse at end of scope

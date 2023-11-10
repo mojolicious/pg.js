@@ -67,6 +67,10 @@ class Database extends Base implements DatabaseEventEmitter {
     }
   }
 
+  async [Symbol.asyncDispose]() {
+    await this.release();
+  }
+
   /**
    * Start transaction.
    */

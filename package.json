@@ -30,14 +30,14 @@
     "build:test": "npm run build && npm test",
     "build:watch": "npm run build -- --watch",
     "clean": "rm -rf tsconfig.tsbuildinfo lib",
-    "coverage": "c8 tap --disable-coverage --allow-empty-coverage test/*.js",
-    "coverage:ci": "c8 --reporter lcovonly tap --disable-coverage --allow-empty-coverage test/*.js",
+    "coverage": "c8 tap --disable-coverage --allow-empty-coverage test/*.js test/*.ts",
+    "coverage:ci": "c8 --reporter lcovonly tap --disable-coverage --allow-empty-coverage test/*.js test/*.ts",
     "lint": "eslint \"test/*.js\" \"src/**/*.ts\" \"src/*.ts\"",
     "lint:fix": "npm run lint -- --fix",
     "prepublishOnly": "npm run build",
     "publish:minor": "npm version minor && npm publish",
     "publish:patch": "npm version patch && npm publish",
-    "test": "tap --disable-coverage --allow-empty-coverage test/*.js"
+    "test": "tap --disable-coverage --allow-empty-coverage test/*.js test/*.ts"
   },
   "exports": "./lib/pg.js",
   "types": "./lib/pg.d.ts",

@@ -11,6 +11,10 @@ export class Transaction {
     this._db = db;
   }
 
+  async [Symbol.asyncDispose]() {
+    await this.rollback();
+  }
+
   /**
    * Commit transaction. Does nothing if `tx.rollback()` has been called first.
    */

@@ -55,6 +55,28 @@ for (const {id, name} of results) {
 }
 ```
 
+All APIs are designed to be compatible with
+[explicit resource management](https://github.com/tc39/proposal-explicit-resource-management) and with TypeScript you
+can already use it in production.
+
+```js
+// Automatically release all connections at end of scope
+await using pg = new Pg('postgres://user:password@localhost:5432/database');
+
+// Automatically release database connection back into the pool for reuse at end of scope
+await using db = await pg.db();
+
+// Automatically roll back transaction if an exception is thrown before `tx.commit()` has been called
+try {
+  await using tx = await db.begin();
+  await db.query`INSERT INTO users (name) VALUES ('sri')`;
+  await db.query`this_is_an_error`;
+  await tx.commit();
+} catch (e) {
+  console.warn('Something went wrong with the transaction');
+}
+```
+
 ### SQL building
 
 For easier SQL query building with partials, there are also `pg.sql` and `db.sql` tagged template literals (provided by
@@ -240,19 +262,6 @@ $ MOJO_PG_DEBUG=1 node myapp.js
 
 INSERT INTO users (name) VALUES ($1)
 ...
-```
-
-### Future
-
-This package is designed to be compatible with the
-[explicit resource management proposal](https://github.com/tc39/proposal-explicit-resource-management) and will support
-it as soon as the `using` keyword is available in Node.js.
-
-```js
-// Multiple queries on the same connection (with automatic resource management)
-using await const db = await pg.db();
-const users = await db.query`SELECT * FROM users`;
-const roles = await db.query`SELECT * FROM roles`;
 ```
 
 ### Editor Support

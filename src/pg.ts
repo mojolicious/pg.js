@@ -37,7 +37,7 @@ export default class Pg extends Base {
   _migrations: Migrations | undefined;
   _doNotEnd = false;
 
-  constructor(config: PgConfig, options: PgOptions = {}) {
+  constructor(config: PgConfig | undefined, options: PgOptions = {}) {
     super();
 
     if (config instanceof Pg) {
@@ -59,6 +59,10 @@ export default class Pg extends Base {
         client.query(`SET search_path TO ${searchPath}`);
       }
     });
+  }
+
+  async [Symbol.asyncDispose]() {
+    await this.end();
   }
 
   /**
@@ -87,7 +91,7 @@ export default class Pg extends Base {
   /**
    * Parse PostgreSQL connection URI.
    */
-  static parseConfig(config: string | pg.PoolConfig): pg.PoolConfig {
+  static parseConfig(config: string | pg.PoolConfig | undefined): pg.PoolConfig | undefined {
     if (typeof config !== 'string') return config;
     const poolConfig: pg.PoolConfig = {};
 

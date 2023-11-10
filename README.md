@@ -270,7 +270,7 @@ INSERT INTO users (name) VALUES ($1)
 
 ## Installation
 
-All you need is Node.js 16.0.0 (or newer).
+All you need is Node.js 18.0.0 (or newer).
 
 ```
 $ npm install @mojojs/pg

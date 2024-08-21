@@ -46,7 +46,7 @@
     "lib/"
   ],
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.4.2",
     "@types/pg": "^8.6.1",
     "@types/stack-utils": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^7.0.1",

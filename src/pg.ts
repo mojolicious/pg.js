@@ -44,7 +44,19 @@ export default class Pg extends Base {
       this.pool = config.pool;
       this._doNotEnd = true;
     } else {
-      this.pool = new pg.Pool({allowExitOnIdle: true, ...options, ...Pg.parseConfig(config)});
+      this.pool = new pg.Pool({
+        allowExitOnIdle: true,
+        ...options,
+        ...Pg.parseConfig(config),
+        verify: (client: pg.PoolClient, done: (err?: Error) => void) => {
+          if (this.searchPath.length > 0) {
+            const searchPath = this.searchPath.map(path => client.escapeIdentifier(path)).join(', ');
+            client.query(`SET search_path TO ${searchPath}`, err => done(err ?? undefined));
+          } else {
+            done();
+          }
+        }
+      } as any);
     }
 
     if (options.searchPath !== undefined) this.searchPath = options.searchPath;
@@ -52,13 +64,6 @@ export default class Pg extends Base {
 
     // Convert BIGINT to number (even if not all 64bit are usable)
     pg.types.setTypeParser(20, parseInt);
-
-    this.pool.on('connect', client => {
-      if (this.searchPath.length > 0) {
-        const searchPath = this.searchPath.map(path => client.escapeIdentifier(path)).join(', ');
-        client.query(`SET search_path TO ${searchPath}`);
-      }
-    });
   }
 
   async [Symbol.asyncDispose]() {

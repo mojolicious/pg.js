@@ -90,6 +90,27 @@ t.test('Database', skip, async t => {
     await pg.end();
   });
 
+  await t.test('Explicit resource management (without "using" syntax)', async t => {
+    const pg = new Pg(process.env.TEST_ONLINE);
+    const db = await pg.db();
+    await db.query`CREATE TEMPORARY TABLE dispose_test (name TEXT)`;
+    const tx = await db.begin();
+    await db.query`INSERT INTO dispose_test (name) VALUES ('rolled back')`;
+    await tx[Symbol.asyncDispose]();
+    t.same(await db.query`SELECT * FROM dispose_test`, []);
+    const tx2 = await db.begin();
+    await db.query`INSERT INTO dispose_test (name) VALUES ('committed')`;
+    await tx2.commit();
+    await tx2[Symbol.asyncDispose]();
+    t.same(await db.query`SELECT * FROM dispose_test`, [{name: 'committed'}]);
+    t.equal(pg.pool.totalCount, 1);
+    t.equal(pg.pool.idleCount, 0);
+    await db[Symbol.asyncDispose]();
+    t.equal(pg.pool.idleCount, 1);
+    await pg[Symbol.asyncDispose]();
+    t.equal(pg.pool.ended, true);
+  });
+
   await t.test('Connection reuse', async t => {
     const pg = new Pg(process.env.TEST_ONLINE);
     const db = await pg.db();

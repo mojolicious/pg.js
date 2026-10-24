@@ -3,6 +3,12 @@
 
 This package strictly follows [Semantic Versioning](https://semver.org).
 
+## v2.0.1 (2026-10-24)
+
+### Bug Fixes
+
+  * Fixed tests on Node.js 22, which does not support the `using` and `await using` syntax yet.
+
 ## v2.0.0 (2026-10-24)
 
 ### Breaking Changes

@@ -1,4 +1,4 @@
-import Pg from '../lib/pg.js';
+import Pg from '../src/pg.ts';
 import t from 'tap';
 
 const skip = process.env.TEST_ONLINE === undefined ? {skip: 'set TEST_ONLINE to enable this test'} : {};
@@ -75,6 +75,18 @@ t.test('Database', skip, async t => {
     pg.searchPath = ['$user', 'foo', 'bar'];
     const results = await pg.query`SHOW search_path`;
     t.same(results, [{search_path: '"$user", foo, bar'}]);
+    await pg.end();
+  });
+
+  await t.test('Custom search path with onConnect hook', async t => {
+    const pg = new Pg(process.env.TEST_ONLINE, {
+      searchPath: ['foo'],
+      onConnect: async client => {
+        await client.query(`SET application_name TO 'pg_test'`);
+      }
+    });
+    t.same(await pg.query`SHOW search_path`, [{search_path: 'foo'}]);
+    t.same(await pg.query`SHOW application_name`, [{application_name: 'pg_test'}]);
     await pg.end();
   });
 

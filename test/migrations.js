@@ -1,4 +1,4 @@
-import Pg from '../lib/pg.js';
+import Pg from '../src/pg.ts';
 import Path from '@mojojs/path';
 import t from 'tap';
 

@@ -3,7 +3,7 @@ process.env.MOJO_PG_DEBUG = '1';
 import {captureOutput} from '@mojojs/util';
 import t from 'tap';
 
-const {default: Pg} = await import('../lib/pg.js');
+const {default: Pg} = await import('../src/pg.ts');
 
 const skip = process.env.TEST_ONLINE === undefined ? {skip: 'set TEST_ONLINE to enable this test'} : {};
 

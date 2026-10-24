@@ -1,4 +1,4 @@
-import Pg from '../lib/pg.js';
+import Pg from '../src/pg.ts';
 import t from 'tap';
 
 const skip = process.env.TEST_ONLINE === undefined ? {skip: 'set TEST_ONLINE to enable this test'} : {};

@@ -1,5 +1,5 @@
-import type {Database} from './database.js';
-import type Pg from './pg.js';
+import type {Database} from './database.ts';
+import type Pg from './pg.ts';
 import Path from '@mojojs/path';
 
 interface MigrationOptions {

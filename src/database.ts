@@ -1,9 +1,9 @@
 import type {Notification, PoolClient, QueryConfig} from 'pg';
-import {on} from 'events';
-import {Base} from './base.js';
-import {Results} from './results.js';
-import {Transaction} from './transaction.js';
-import {throwWithContext} from './util.js';
+import {on} from 'node:events';
+import {Base} from './base.ts';
+import {Results} from './results.ts';
+import {Transaction} from './transaction.ts';
+import {throwWithContext} from './util.ts';
 
 interface DatabaseEvents {
   end: (this: Database) => void;

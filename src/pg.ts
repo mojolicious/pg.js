@@ -1,8 +1,8 @@
-import {Base} from './base.js';
-import {Database} from './database.js';
-import {Migrations} from './migrations.js';
-import {Results} from './results.js';
-import {throwWithContext} from './util.js';
+import {Base} from './base.ts';
+import {Database} from './database.ts';
+import {Migrations} from './migrations.ts';
+import {Results} from './results.ts';
+import {throwWithContext} from './util.ts';
 import {urlSplit} from '@mojojs/util';
 import pg from 'pg';
 
@@ -44,7 +44,19 @@ export default class Pg extends Base {
       this.pool = config.pool;
       this._doNotEnd = true;
     } else {
-      this.pool = new pg.Pool({allowExitOnIdle: true, ...options, ...Pg.parseConfig(config)});
+      const poolConfig: pg.PoolConfig = {allowExitOnIdle: true, ...options, ...Pg.parseConfig(config)};
+      const onConnect = poolConfig.onConnect;
+
+      // Awaited before the client is handed out, so the first query cannot overlap with "SET search_path"
+      poolConfig.onConnect = async client => {
+        if (this.searchPath.length > 0) {
+          const searchPath = this.searchPath.map(path => client.escapeIdentifier(path)).join(', ');
+          await client.query(`SET search_path TO ${searchPath}`);
+        }
+        if (onConnect !== undefined) await onConnect(client);
+      };
+
+      this.pool = new pg.Pool(poolConfig);
     }
 
     if (options.searchPath !== undefined) this.searchPath = options.searchPath;
@@ -52,13 +64,6 @@ export default class Pg extends Base {
 
     // Convert BIGINT to number (even if not all 64bit are usable)
     pg.types.setTypeParser(20, parseInt);
-
-    this.pool.on('connect', client => {
-      if (this.searchPath.length > 0) {
-        const searchPath = this.searchPath.map(path => client.escapeIdentifier(path)).join(', ');
-        client.query(`SET search_path TO ${searchPath}`);
-      }
-    });
   }
 
   async [Symbol.asyncDispose]() {

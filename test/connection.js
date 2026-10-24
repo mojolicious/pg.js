@@ -1,4 +1,4 @@
-import Pg from '../lib/pg.js';
+import Pg from '../src/pg.ts';
 import t from 'tap';
 
 t.test('Connections', t => {
